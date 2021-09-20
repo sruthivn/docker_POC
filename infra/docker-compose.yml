@@ -1,0 +1,50 @@
+version: "3.7"
+services:  
+  poc-frontend:
+    container_name: poc-frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile    
+    ports:
+      - "9009:80"     
+    depends_on:
+      - poc-backend       
+  poc-backend:
+    container_name: poc-back
+    build:
+      context: ../backend
+    ports:
+      - "9008:8000"
+    volumes:
+      - ../backend:/backend
+    command: >
+      sh -c "python3 manage.py makemigrations &&            
+          python3 manage.py migrate &&                 
+          python3 manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - poc-db           
+  poc-db:  
+   # container_name: poc-db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: poc-app-db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin123
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    volumes:
+      - ./backend/data/mysql/db:/var/lib/mysql
+    ports:
+      - "9003:3306"    
+  poc-phpmyadmin:
+    container_name: poc-phpmyadmin
+    image: phpmyadmin/phpmyadmin    
+    depends_on:
+      - poc-db   
+    environment:
+      - PMA_HOST=poc-db
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1       
+    restart: "always"
+    ports:
+      - "9007:80"  

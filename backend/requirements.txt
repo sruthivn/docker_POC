@@ -1,0 +1,11 @@
+Django==3.2.5
+djangorestframework==3.12.4
+django-cors-headers==3.7.0
+openpyxl==3.0.7
+pandas==1.2.4
+numpy==1.20.2
+mysqlclient==2.0.3
+django-db-logger==0.1.10
+djangorestframework-simplejwt==4.7.2
+
+
