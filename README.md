@@ -1,1 +1,2 @@
 # django-vue
+POC Project
